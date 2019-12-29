@@ -1,5 +1,8 @@
 package br.com.api.restwithspringboot.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,51 +16,49 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import br.com.api.restwithspringboot.data.vo.PersonVO;
-import br.com.api.restwithspringboot.services.PersonService;
+import br.com.api.restwithspringboot.data.vo.BookVO;
+import br.com.api.restwithspringboot.services.BookService;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api/person/v1")
-public class PersonController {
+@RequestMapping("/api/book/v1")
+public class BookController {
 	
 	@Autowired
-	private PersonService personService;
+	private BookService bookService;
 	
 	@GetMapping(produces = {"application/json","application/xml", "application/x-yaml"})
-	public List<PersonVO> findAll() {
-		List<PersonVO> persons = personService.findAll();
-		persons.stream().forEach(p ->  p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
-		return persons;
+	public List<BookVO> findAll() {
+		List<BookVO> books = bookService.findAll();
+		books.stream().forEach(p ->  p.add(linkTo(methodOn(BookController.class).findById(p.getKey())).withSelfRel()));
+		return books;
 	}
 	
 	@GetMapping(value = "/{id}", produces = {"application/json","application/xml", "application/x-yaml"})
-	public PersonVO findById(@PathVariable("id") Long id) {
-		PersonVO personVO = personService.findById(id);
-		personVO.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
-		return personVO;
+	public BookVO findById(@PathVariable("id") Long id) {
+		BookVO BookVO = bookService.findById(id);
+		BookVO.add(linkTo(methodOn(BookController.class).findById(id)).withSelfRel());
+		return BookVO;
 	}
 	
 	@PostMapping(produces = {"application/json","application/xml", "application/x-yaml"}, consumes = {"application/json","application/xml", "application/x-yaml"})
-	public PersonVO create(@RequestBody PersonVO person) {
-		PersonVO personVO = personService.create(person);
-		personVO.add(linkTo(methodOn(PersonController.class).findById(personVO.getKey())).withSelfRel());
-		return personVO;
+	public BookVO create(@RequestBody BookVO Book) {
+		BookVO BookVO = bookService.create(Book);
+		BookVO.add(linkTo(methodOn(BookController.class).findById(BookVO.getKey())).withSelfRel());
+		return BookVO;
 	}
 	
 	@PutMapping(produces = {"application/json","application/xml", "application/x-yaml"}, consumes = {"application/json","application/xml", "application/x-yaml"})
-	public PersonVO update(@RequestBody PersonVO person) {
-		PersonVO personVO = personService.update(person);
-		personVO.add(linkTo(methodOn(PersonController.class).findById(personVO.getKey())).withSelfRel());
-		return personVO;
+	public BookVO update(@RequestBody BookVO Book) {
+		BookVO BookVO = bookService.update(Book);
+		BookVO.add(linkTo(methodOn(BookController.class).findById(BookVO.getKey())).withSelfRel());
+		return BookVO;
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-		personService.delete(id);
+		bookService.delete(id);
 		return ResponseEntity.ok().build();
 	}
 	
