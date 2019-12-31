@@ -36,5 +36,7 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
 	//@JsonIgnore
 	//This annotation ignore the attribute on response
 	private String gender;
+	
+	private Boolean enabled;
 
 }

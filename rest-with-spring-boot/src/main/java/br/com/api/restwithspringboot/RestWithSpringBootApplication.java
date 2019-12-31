@@ -15,7 +15,7 @@ public class RestWithSpringBootApplication {
 		SpringApplication.run(RestWithSpringBootApplication.class, args);
 
 //		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(16);
-//		String result = bCryptPasswordEncoder.encode("90935306");
+//		String result = bCryptPasswordEncoder.encode("PASSWORD");
 //		System.out.println("My hash " + result);
 	}
 

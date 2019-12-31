@@ -2,6 +2,8 @@ package br.com.api.restwithspringboot.services.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +56,16 @@ public class PersonServiceImpl implements PersonService{
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 		
 		personRepository.delete(entity);
+	}
+
+	@Transactional
+	@Override
+	public PersonVO disablePerson(Long id) {
+		personRepository.disablePerson(id);
+		Person entity = personRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+		
+		return DozerConverter.parseObject(entity, PersonVO.class);
 	}
 
 }
