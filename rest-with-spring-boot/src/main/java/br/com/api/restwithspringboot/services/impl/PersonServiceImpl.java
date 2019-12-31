@@ -1,10 +1,10 @@
 package br.com.api.restwithspringboot.services.impl;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.api.restwithspringboot.converter.DozerConverter;
@@ -29,8 +29,15 @@ public class PersonServiceImpl implements PersonService{
 	}
 
 	@Override
-	public List<PersonVO> findAll() {
-		return DozerConverter.parseListObjects(personRepository.findAll(), PersonVO.class);
+	public Page<PersonVO> findAll(Pageable pageable) {
+		Page<Person> page = personRepository.findAll(pageable);
+		return page.map(this::convertToPersonVO);
+	}
+	
+	@Override
+	public Page<PersonVO> findPersonByName(String firstName, Pageable pageable) {
+		Page<Person> page = this.personRepository.findPersonByName(firstName, pageable);
+		return page.map(this::convertToPersonVO);
 	}
 
 	@Override
@@ -67,5 +74,8 @@ public class PersonServiceImpl implements PersonService{
 		
 		return DozerConverter.parseObject(entity, PersonVO.class);
 	}
-
+	
+	private PersonVO convertToPersonVO(Person entity) {
+		return DozerConverter.parseObject(entity, PersonVO.class);
+	}
 }

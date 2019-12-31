@@ -1,8 +1,8 @@
 package br.com.api.restwithspringboot.services.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.api.restwithspringboot.converter.DozerConverter;
@@ -27,8 +27,9 @@ public class BookServiceImpl implements BookService{
 	}
 
 	@Override
-	public List<BookVO> findAll() {
-		return DozerConverter.parseListObjects(bookRepository.findAll(), BookVO.class);
+	public Page<BookVO> findAll(Pageable pageable) {
+		 Page<Book> page = bookRepository.findAll(pageable);
+		 return page.map(this::convertEntityToVO);
 	}
 
 	@Override
@@ -54,6 +55,10 @@ public class BookServiceImpl implements BookService{
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 		
 		bookRepository.delete(entity);
+	}
+	
+	private BookVO convertEntityToVO(Book book) {
+		return DozerConverter.parseObject(book, BookVO.class);
 	}
 
 }

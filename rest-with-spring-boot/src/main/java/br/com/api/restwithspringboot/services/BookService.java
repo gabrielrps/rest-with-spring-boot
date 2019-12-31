@@ -1,6 +1,7 @@
 package br.com.api.restwithspringboot.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import br.com.api.restwithspringboot.data.vo.BookVO;
 
@@ -8,7 +9,7 @@ public interface BookService {
 	
 	public BookVO findById(Long id);
 
-	public List<BookVO> findAll();
+	public Page<BookVO> findAll(Pageable pageable);
 	
 	public BookVO create(BookVO person);
 	
