@@ -35,12 +35,14 @@ public class PersonController {
 	@Autowired
 	private PersonService personService;
 	
+	@Autowired
+	private PagedResourcesAssembler<PersonVO> assembler;
+	
 	@GetMapping(produces = {"application/json","application/xml", "application/x-yaml"})
 	public ResponseEntity<?> findAll(
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "12") int limit,
-			@RequestParam(value = "direction", defaultValue = "asc") String direction,
-			PagedResourcesAssembler<PersonVO> assembler) {
+			@RequestParam(value = "direction", defaultValue = "asc") String direction) {
 		
 		
 		Sort sort = Sort.by((direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC), "firstName");
@@ -57,8 +59,7 @@ public class PersonController {
 	public ResponseEntity<?> findPersonByName(@PathVariable("firstName") String firstName,
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "12") int limit,
-			@RequestParam(value = "direction", defaultValue = "asc") String direction,
-			PagedResourcesAssembler<PersonVO> assembler){
+			@RequestParam(value = "direction", defaultValue = "asc") String direction){
 		
 		Sort sort = Sort.by((direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC), "firstName");
 		
@@ -66,7 +67,7 @@ public class PersonController {
 		
 		Page<PersonVO> pages = this.personService.findPersonByName(firstName, pageable);
 		
-		pages.stream().forEach(p ->  p.add(linkTo(methodOn(PersonController.class).findPersonByName(firstName, page, limit, direction, assembler)).withSelfRel()));
+		pages.stream().forEach(p ->  p.add(linkTo(methodOn(PersonController.class).findPersonByName(firstName, page, limit, direction)).withSelfRel()));
 		
 		return new ResponseEntity<>(assembler.toModel(pages), HttpStatus.OK);
 	}

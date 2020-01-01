@@ -34,17 +34,37 @@ public class BookController {
 	@Autowired
 	private BookService bookService;
 	
+	@Autowired
+	private PagedResourcesAssembler<BookVO> assembler;
+	
 	@GetMapping(produces = {"application/json","application/xml", "application/x-yaml"})
 	public ResponseEntity<?> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "12") int limit,
-			@RequestParam(value = "direction", defaultValue = "asc") String direction,
-			PagedResourcesAssembler<BookVO> assembler) {
+			@RequestParam(value = "direction", defaultValue = "asc") String direction) {
 		
 		Sort sort = Sort.by((direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC), "launchDate");
 		
 		Pageable pageable = PageRequest.of(page, limit, sort);
 		
 		Page<BookVO> books = bookService.findAll(pageable);
+		
+		books.stream().forEach(p ->  p.add(linkTo(methodOn(BookController.class).findById(p.getKey())).withSelfRel()));
+		
+		return new ResponseEntity<>(assembler.toModel(books), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/findBookByAuthor/{author}", produces = {"application/json","application/xml", "application/x-yaml"})
+	public ResponseEntity<?> findBookByAuthor(
+			@PathVariable("author") String author,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "limit", defaultValue = "12") int limit,
+			@RequestParam(value = "direction", defaultValue = "asc") String direction) {
+		
+		Sort sort = Sort.by((direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC), "launchDate");
+		
+		Pageable pageable = PageRequest.of(page, limit, sort);
+		
+		Page<BookVO> books = bookService.findBookByAuthor(author, pageable);
 		
 		books.stream().forEach(p ->  p.add(linkTo(methodOn(BookController.class).findById(p.getKey())).withSelfRel()));
 		

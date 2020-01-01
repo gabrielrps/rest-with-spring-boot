@@ -31,6 +31,12 @@ public class BookServiceImpl implements BookService{
 		 Page<Book> page = bookRepository.findAll(pageable);
 		 return page.map(this::convertEntityToVO);
 	}
+	
+	@Override
+	public Page<BookVO> findBookByAuthor(String author, Pageable pageable) {
+		Page<Book> page = bookRepository.findBookByAuthor(author, pageable);
+		return page.map(this::convertEntityToVO);
+	}
 
 	@Override
 	public BookVO create(BookVO Book) {

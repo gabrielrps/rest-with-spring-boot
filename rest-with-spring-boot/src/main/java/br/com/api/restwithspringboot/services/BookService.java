@@ -16,5 +16,7 @@ public interface BookService {
 	public BookVO update(BookVO person);
 	
 	public void delete(Long id);
+	
+	public Page<BookVO> findBookByAuthor(String author, Pageable pageable);
 
 }
