@@ -10,7 +10,7 @@ deploy:
   provider: script
   script:
     docker push gabrielrps/rest-with-spring-boot;
-    docker push mysql-gabrielrps/rest-with-spring-boot;
+    docker push gabrielrps/mysql-rest-with-spring-boot;
   on:
     branch: master
 notifications:
